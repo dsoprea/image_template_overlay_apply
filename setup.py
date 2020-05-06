@@ -25,7 +25,7 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     author='Dustin Oprea',
     author_email='myselfasunder@gmail.com',
-    url='https://github.com/dsoprea/image_template_layer_apply',
+    url='https://github.com/dsoprea/image_template_overlay_apply',
     license='MIT',
     packages=setuptools.find_packages(exclude=['tests']),
     include_package_data=True,
