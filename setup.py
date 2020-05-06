@@ -31,7 +31,7 @@ setuptools.setup(
     include_package_data=True,
     zip_safe=False,
     scripts=[
-        # 'templatelayer/resources/scripts/finish_template_image',
+        'templatelayer/resources/scripts/template_image_apply_overlays',
     ],
     install_requires=install_requires,
 )

@@ -1,13 +1,10 @@
 import unittest
-import os
-import io
+import json
 
 import PIL.Image
 
 import templatelayer.template_layout
-
-# _APP_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-# _ASSETS_PATH = os.path.join(_APP_PATH, 'assets')
+import templatelayer.testing_common
 
 _TEST_GOOD_LAYOUT_CONFIG = u"""\
 {
@@ -42,15 +39,12 @@ _TEST_GOOD_LAYOUT_CONFIG = u"""\
 
 
 class TestSimpleTemplateLayout(unittest.TestCase):
-    def _get_new_image(self, width, height, rgb_tuple=(0, 0, 0)):
-        mode = 'RGB'
-        size = (width, height)
-
-        template_im = PIL.Image.new(mode, size, color=rgb_tuple)
-        return template_im
-
     def _get_empty_template_image(self):
-        template_im = self._get_new_image(100, 300)
+        template_im = \
+            templatelayer.testing_common.get_new_image(
+                100,
+                300)
+
         return template_im
 
     def _get_basic_object(self, template_im=None, config=None):
@@ -60,7 +54,7 @@ class TestSimpleTemplateLayout(unittest.TestCase):
         if config is None:
             config = _TEST_GOOD_LAYOUT_CONFIG
 
-        lc = io.StringIO(config)
+        lc = json.loads(config)
         tl = templatelayer.template_layout.SimpleTemplateLayout(template_im, lc)
 
         return tl
@@ -74,7 +68,7 @@ class TestSimpleTemplateLayout(unittest.TestCase):
         # This will already parse the config once, but may not catch subtle errors.
         tl = self._get_basic_object()
 
-        lc = io.StringIO(_TEST_GOOD_LAYOUT_CONFIG)
+        lc = json.loads(_TEST_GOOD_LAYOUT_CONFIG)
         actual = tl._parse_and_validate(lc)
 
         expected = {
@@ -247,15 +241,25 @@ class TestSimpleTemplateLayout(unittest.TestCase):
         tl = self._get_basic_object()
         for name in tl.supported_placeholder_names:
             ph = tl.get_placeholder_config(name)
-            placeholder_im = self._get_new_image(ph.width, ph.height)
+
+            placeholder_im = \
+                templatelayer.testing_common.get_new_image(
+                    ph.width,
+                    ph.height)
+
             tl.validate_image_for_placeholder(name, placeholder_im)
 
-    def test_apply_placeholder__one(self):
+    def test_apply_component__one(self):
         tl = self._get_basic_object()
 
         ph = tl.get_placeholder_config('bottom-center')
-        placeholder_im = self._get_new_image(ph.width, ph.height)
-        tl.apply_placeholder(ph.name, placeholder_im)
+
+        placeholder_im = \
+            templatelayer.testing_common.get_new_image(
+                ph.width,
+                ph.height)
+
+        tl.apply_component(ph.name, placeholder_im)
 
 
         self.assertFalse(tl.is_completely_applied)
@@ -289,16 +293,24 @@ class TestSimpleTemplateLayout(unittest.TestCase):
             sorted(tl.unapplied_placeholder_names),
             expected_unapplied_placeholder_names)
 
-    def test_apply_placeholder__multiple_some(self):
+    def test_apply_component__multiple_some(self):
         tl = self._get_basic_object()
 
         ph = tl.get_placeholder_config('bottom-center')
-        placeholder_im = self._get_new_image(ph.width, ph.height)
-        tl.apply_placeholder(ph.name, placeholder_im)
+        placeholder_im = \
+            templatelayer.testing_common.get_new_image(
+                ph.width,
+                ph.height)
+
+        tl.apply_component(ph.name, placeholder_im)
 
         ph = tl.get_placeholder_config('middle-center')
-        placeholder_im = self._get_new_image(ph.width, ph.height)
-        tl.apply_placeholder(ph.name, placeholder_im)
+        placeholder_im = \
+            templatelayer.testing_common.get_new_image(
+                ph.width,
+                ph.height)
+
+        tl.apply_component(ph.name, placeholder_im)
 
         self.assertFalse(tl.is_completely_applied)
 
@@ -331,12 +343,16 @@ class TestSimpleTemplateLayout(unittest.TestCase):
             sorted(tl.unapplied_placeholder_names),
             expected_unapplied_placeholder_names)
 
-    def test_apply_placeholder__multiple_all(self):
+    def test_apply_component__multiple_all(self):
         tl = self._get_basic_object()
         for name in tl.supported_placeholder_names:
             ph = tl.get_placeholder_config(name)
-            placeholder_im = self._get_new_image(ph.width, ph.height)
-            tl.apply_placeholder(name, placeholder_im)
+            placeholder_im = \
+                templatelayer.testing_common.get_new_image(
+                    ph.width,
+                    ph.height)
+
+            tl.apply_component(name, placeholder_im)
 
         self.assertTrue(tl.is_completely_applied)
 
@@ -359,7 +375,7 @@ class TestSimpleTemplateLayout(unittest.TestCase):
             tl.unapplied_placeholder_names,
             [])
 
-    def test_apply_placeholder__multiple_all__check_image(self):
+    def test_apply_component__multiple_all__check_image(self):
         small_config = u"""\
 {
     "placeholders": {
@@ -391,7 +407,11 @@ class TestSimpleTemplateLayout(unittest.TestCase):
 }
 """
 
-        template_im = self._get_new_image(4, 6)
+        template_im = \
+            templatelayer.testing_common.get_new_image(
+                4,
+                6)
+
         tl = self._get_basic_object(
                 template_im=template_im,
                 config=small_config)
@@ -412,8 +432,13 @@ class TestSimpleTemplateLayout(unittest.TestCase):
 
         # Overlay top-left.
 
-        placeholder_im = self._get_new_image(2, 2, rgb_tuple=(1, 1, 1))
-        tl.apply_placeholder('top-left', placeholder_im)
+        placeholder_im = \
+            templatelayer.testing_common.get_new_image(
+                2,
+                2,
+                color=(1, 1, 1))
+
+        tl.apply_component('top-left', placeholder_im)
 
         actual_initial_pixels = self._get_pixels(tl.resource)
         actual_initial_pixels = list(actual_initial_pixels)
@@ -431,8 +456,13 @@ class TestSimpleTemplateLayout(unittest.TestCase):
 
         # Overlay top-right.
 
-        placeholder_im = self._get_new_image(2, 2, rgb_tuple=(2, 2, 2))
-        tl.apply_placeholder('top-right', placeholder_im)
+        placeholder_im = \
+            templatelayer.testing_common.get_new_image(
+                2,
+                2,
+                color=(2, 2, 2))
+
+        tl.apply_component('top-right', placeholder_im)
 
         actual_initial_pixels = self._get_pixels(tl.resource)
         actual_initial_pixels = list(actual_initial_pixels)
@@ -450,8 +480,13 @@ class TestSimpleTemplateLayout(unittest.TestCase):
 
         # Overlay middle-center.
 
-        placeholder_im = self._get_new_image(4, 2, rgb_tuple=(3, 3, 3))
-        tl.apply_placeholder('middle-center', placeholder_im)
+        placeholder_im = \
+            templatelayer.testing_common.get_new_image(
+                4,
+                2,
+                color=(3, 3, 3))
+
+        tl.apply_component('middle-center', placeholder_im)
 
         actual_initial_pixels = self._get_pixels(tl.resource)
         actual_initial_pixels = list(actual_initial_pixels)
@@ -469,8 +504,13 @@ class TestSimpleTemplateLayout(unittest.TestCase):
 
         # Overlay bottom-center.
 
-        placeholder_im = self._get_new_image(4, 2, rgb_tuple=(4, 4, 4))
-        tl.apply_placeholder('bottom-center', placeholder_im)
+        placeholder_im = \
+            templatelayer.testing_common.get_new_image(
+                4,
+                2,
+                color=(4, 4, 4))
+
+        tl.apply_component('bottom-center', placeholder_im)
 
         actual_initial_pixels = self._get_pixels(tl.resource)
         actual_initial_pixels = list(actual_initial_pixels)
@@ -486,11 +526,11 @@ class TestSimpleTemplateLayout(unittest.TestCase):
 
         self.assertEquals(actual_initial_pixels, expected_initial_pixels)
 
-    def test_apply_placeholder__unknown_placeholder(self):
+    def test_apply_component__unknown_placeholder(self):
         tl = self._get_basic_object()
 
         try:
-            tl.apply_placeholder("unknown-placehodler", None)
+            tl.apply_component("unknown-placehodler", None)
         except templatelayer.template_layout.UnknownPlaceholderException:
             pass
         else:
@@ -512,7 +552,11 @@ class TestSimpleTemplateLayout(unittest.TestCase):
 }
 """
 
-        template_im = self._get_new_image(4, 6)
+        template_im = \
+            templatelayer.testing_common.get_new_image(
+                4,
+                6)
+
         tl = self._get_basic_object(
                 template_im=template_im,
                 config=small_config)
@@ -542,7 +586,11 @@ class TestSimpleTemplateLayout(unittest.TestCase):
 }
 """
 
-        template_im = self._get_new_image(4, 6)
+        template_im = \
+            templatelayer.testing_common.get_new_image(
+                4,
+                6)
+
         tl = self._get_basic_object(
                 template_im=template_im,
                 config=small_config)
@@ -578,7 +626,11 @@ class TestSimpleTemplateLayout(unittest.TestCase):
 }
 """
 
-        template_im = self._get_new_image(4, 6)
+        template_im = \
+            templatelayer.testing_common.get_new_image(
+                4,
+                6)
+
         tl = self._get_basic_object(
                 template_im=template_im,
                 config=small_config)
@@ -620,7 +672,11 @@ class TestSimpleTemplateLayout(unittest.TestCase):
 }
 """
 
-        template_im = self._get_new_image(4, 6)
+        template_im = \
+            templatelayer.testing_common.get_new_image(
+                4,
+                6)
+
         tl = self._get_basic_object(
                 template_im=template_im,
                 config=small_config)

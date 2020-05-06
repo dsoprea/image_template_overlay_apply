@@ -32,22 +32,21 @@ class UnknownPlaceholderException(TemplateLayoutException):
 
 
 class SimpleTemplateLayout(object):
-    def __init__(self, template_im, config_f):
+    def __init__(self, template_im, config):
         """Initialize with the template IM object and the file-like resource
         with the layout config.
         """
 
-        placeholder_configs = self._parse_and_validate(config_f)
+        placeholder_configs = self._parse_and_validate(config)
         self._placeholder_configs = placeholder_configs
 
         self._applied_placeholders_s = set()
 
         self._base_im = template_im
 
-    def _parse_and_validate(self, f):
+    def _parse_and_validate(self, layout):
         """Process the whole config."""
 
-        layout = json.load(f)
         placeholders = layout.get('placeholders')
 
         assert \
@@ -160,12 +159,16 @@ class SimpleTemplateLayout(object):
 
         return config
 
-    def apply_placeholder(self, name, overlay_im):
-        """Overlay the given image on the specific configured area for the
+    def apply_component(self, name, overlay_im):
+        """Overlay the given image to the specific configured area of the
         placeholder.
         """
 
 # TODO(dustin): Add support for masking (for irregular shapes) later, if/when it comes up.
+
+        assert \
+            name not in self._applied_placeholders_s, \
+            "Placeholder name not unique: [{}]".format(name)
 
         config = self.validate_image_for_placeholder(name, overlay_im)
 
@@ -174,11 +177,11 @@ class SimpleTemplateLayout(object):
 
         self._applied_placeholders_s.add(name)
 
-    def apply_placeholders(self, im_mapping):
+    def apply_components(self, im_mapping):
         """Apply multiple overlays."""
 
         for name, overlay_im in im_mapping.items():
-            self.apply_placeholder(name, overlay_im)
+            self.apply_component(name, overlay_im)
 
     @property
     def supported_placeholder_names(self):

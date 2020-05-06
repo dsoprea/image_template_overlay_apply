@@ -1,0 +1,95 @@
+#!/usr/bin/env python
+
+import argparse
+import sys
+import json
+
+import PIL.Image
+
+import templatelayer.template_layout
+
+def _apply_component_images(tl, components):
+    for name, filepath in components:
+        print("Applying: [{}] [{}]".format(name, filepath))
+
+        overlay_im = PIL.Image.open(filepath)
+        tl.apply_component(name, overlay_im)
+
+def _main(args):
+    if not args.components:
+        print("At least one component image must be provided.")
+        sys.exit(2)
+
+    in_resource = None
+    out_resource = None
+
+    try:
+        # Setup inputs and outputs.
+
+        if args.template_image_filepath is None:
+            if sys.stdin.isatty() is True:
+                print("Input not piped.")
+                sys.exit(3)
+
+            in_resource = sys.stdin
+        else:
+            in_resource = open(args.template_image_filepath, 'rb')
+
+        if args.output_image_filepath is None:
+            if sys.stdin.isatty() is True:
+                print("Output not piped.")
+                sys.exit(3)
+
+            out_resource = sys.stdout
+        else:
+            out_resource = open(args.output_image_filepath, 'wb')
+
+        # Get config.
+
+        with open(args.layout_config_filepath) as f:
+            config = json.load(f)
+
+        template_im = PIL.Image.open(in_resource)
+        tl = templatelayer.template_layout.SimpleTemplateLayout(
+                template_im,
+                config)
+
+        _apply_component_images(tl, args.components)
+
+        print("Writing.")
+        tl.resource.save(out_resource)
+    finally:
+        in_resource.close()
+        out_resource.close()
+
+def _get_args():
+    p = argparse.ArgumentParser()
+
+    p.add_argument(
+        'layout_config_filepath',
+        help="JSON file describing template layout")
+
+    p.add_argument(
+        '--template-filepath',
+        dest='template_image_filepath',
+        help="Template image file-path. Default is STDIN.")
+
+    p.add_argument(
+        '--output-filepath',
+        dest='output_image_filepath',
+        help="Output image file-path. Default is STDOUT.")
+
+    p.add_argument(
+        '-c', '--component-filepath',
+        nargs=2,
+        action='append',
+        default=[],
+        dest='components',
+        help='One placeholder name and component image file-path')
+
+    args = p.parse_args()
+    return args
+
+if __name__ == '__main__':
+    args = _get_args()
+    _main(args)
