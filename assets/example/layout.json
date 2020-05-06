@@ -1,0 +1,28 @@
+{
+    "placeholders": {
+        "top-left": {
+            "left": 0,
+            "top": 0,
+            "width": 50,
+            "height": 100
+        },
+        "top-right": {
+            "left": 50,
+            "top": 0,
+            "width": 50,
+            "height": 100
+        },
+        "middle-center": {
+            "left": 0,
+            "top": 100,
+            "width": 100,
+            "height": 100
+        },
+        "bottom-center": {
+            "left": 0,
+            "top": 200,
+            "width": 100,
+            "height": 100
+        }
+    }
+}
