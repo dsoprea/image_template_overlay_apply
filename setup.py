@@ -18,7 +18,7 @@ with open(os.path.join(_APP_PATH, 'resources', 'requirements.txt'), 'rt') as f:
     install_requires = [s.strip() for s in f.readlines()]
 
 setuptools.setup(
-    name='templatelayer',
+    name='image_template_overlay_apply',
     version=templatelayer.__version__,
     description=_DESCRIPTION,
     long_description=long_description,
