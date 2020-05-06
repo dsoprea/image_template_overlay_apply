@@ -1,0 +1,13 @@
+language: python
+python:
+  - "2.7"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+
+install:
+  - pip install coverage coveralls
+  - pip install -e .
+script: coverage run --include tests --source templatelayer -m nose2 tests -v --pretty-assert
+after_success:
+  - coveralls

@@ -1,3 +1,4 @@
+import sys
 import unittest
 import os
 import tempfile
@@ -13,6 +14,8 @@ import templatelayer.testing_common
 _APP_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 _SCRIPT_PATH = os.path.join(_APP_PATH, 'templatelayer', 'resources', 'scripts')
 _TOOL_FILEPATH = os.path.join(_SCRIPT_PATH, 'template_image_apply_overlays')
+
+sys.path.insert(0, _APP_PATH)
 
 
 class TestCommand(unittest.TestCase):

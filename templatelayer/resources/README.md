@@ -98,5 +98,5 @@ The output will look like:
 To run the unit-tests:
 
 ```
-./test.sh
+$ nose2 -v tests
 ```
