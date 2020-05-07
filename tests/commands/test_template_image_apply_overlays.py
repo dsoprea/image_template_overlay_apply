@@ -115,7 +115,11 @@ class TestCommand(unittest.TestCase):
             ]
 
             try:
-                actual = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+                actual = \
+                    subprocess.check_output(
+                        cmd,
+                        stderr=subprocess.STDOUT,
+                        universal_newlines=True)
             except subprocess.CalledProcessError as cpe:
                 print(cpe.output)
                 raise
