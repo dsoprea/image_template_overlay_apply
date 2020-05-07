@@ -4,10 +4,10 @@ import setuptools
 
 import templatelayer
 
+# This can't be more than one line or it'll be misinterpreted as the long-
+# description.
 _DESCRIPTION = """\
-Takes an image that has placeholders and applies separate component issues to
-it.
-"""
+Takes an image that has placeholders and applies separate component issues to it."""
 
 _APP_PATH = os.path.dirname(templatelayer.__file__)
 
