@@ -26,12 +26,12 @@ $ sudo pip install -e .
 
 # Library Usage
 
-It is recommended that you use the source-code of the [tool](templatelayer/resources/scripts/template_image_apply_overlays) as a roadmap to using the library. There is also excellent [unit-test coverage](tests) that may be used for guidance.
+It is recommended that you use the source-code of the [tool](https://github.com/dsoprea/image_template_overlay_apply/blob/master/templatelayer/resources/scripts/template_image_apply_overlays) as a roadmap to using the library. There is also excellent [unit-test coverage](https://github.com/dsoprea/image_template_overlay_apply/blob/master/tests) that may be used for guidance.
 
 
 # Tool Usage
 
-The tool has [full command-line documentation](templatelayer/resources/scripts/template_image_apply_overlays). You can also read the template from STDIN and write the output image to STDOUT (using the same format as the input).
+The tool has [full command-line documentation](https://github.com/dsoprea/image_template_overlay_apply/blob/master/templatelayer/resources/scripts/template_image_apply_overlays). You can also read the template from STDIN and write the output image to STDOUT (using the same format as the input).
 
 
 ## Example
@@ -92,7 +92,7 @@ Writing.
 
 The output will look like:
 
-![example output](assets/example/output.png "Example Output")
+![example output](https://github.com/dsoprea/image_template_overlay_apply/blob/master/assets/example/output.png "Example Output")
 
 
 # Tests
