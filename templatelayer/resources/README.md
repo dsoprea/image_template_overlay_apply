@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dsoprea/image_template_overlay_apply.svg?branch=master)](https://travis-ci.org/dsoprea/image_template_overlay_apply) [![Coverage Status](https://coveralls.io/repos/github/dsoprea/image_template_overlay_apply/badge.svg?branch=master)](https://coveralls.io/github/dsoprea/image_template_overlay_apply?branch=master)
+
 # Overview
 
 This is a library and tool that streamlines applying component images to a template image. A config is provided that defines boundaries of the regions within the template image to apply the component images to.
