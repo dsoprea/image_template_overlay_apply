@@ -60,8 +60,8 @@ class TestSimpleTemplateLayout(unittest.TestCase):
         return tl
 
     def _get_pixels(self, im):
-        initial_pixels = im.getdata()
-        for pixel in initial_pixels:
+        current_pixels = im.getdata()
+        for pixel in current_pixels:
             yield pixel
 
     def test_parse_and_validate(self):
@@ -440,10 +440,10 @@ class TestSimpleTemplateLayout(unittest.TestCase):
 
         tl.apply_component('top-left', placeholder_im)
 
-        actual_initial_pixels = self._get_pixels(tl.resource)
-        actual_initial_pixels = list(actual_initial_pixels)
+        actual_current_pixels = self._get_pixels(tl.resource)
+        actual_current_pixels = list(actual_current_pixels)
 
-        expected_initial_pixels = [
+        expected_current_pixels = [
             (1, 1, 1), (1, 1, 1), (0, 0, 0), (0, 0, 0),
             (1, 1, 1), (1, 1, 1), (0, 0, 0), (0, 0, 0),
             (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0),
@@ -452,7 +452,7 @@ class TestSimpleTemplateLayout(unittest.TestCase):
             (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0),
         ]
 
-        self.assertEquals(actual_initial_pixels, expected_initial_pixels)
+        self.assertEquals(actual_current_pixels, expected_current_pixels)
 
         # Overlay top-right.
 
@@ -464,10 +464,10 @@ class TestSimpleTemplateLayout(unittest.TestCase):
 
         tl.apply_component('top-right', placeholder_im)
 
-        actual_initial_pixels = self._get_pixels(tl.resource)
-        actual_initial_pixels = list(actual_initial_pixels)
+        actual_current_pixels = self._get_pixels(tl.resource)
+        actual_current_pixels = list(actual_current_pixels)
 
-        expected_initial_pixels = [
+        expected_current_pixels = [
             (1, 1, 1), (1, 1, 1), (2, 2, 2), (2, 2, 2),
             (1, 1, 1), (1, 1, 1), (2, 2, 2), (2, 2, 2),
             (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0),
@@ -476,7 +476,7 @@ class TestSimpleTemplateLayout(unittest.TestCase):
             (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0),
         ]
 
-        self.assertEquals(actual_initial_pixels, expected_initial_pixels)
+        self.assertEquals(actual_current_pixels, expected_current_pixels)
 
         # Overlay middle-center.
 
@@ -488,10 +488,10 @@ class TestSimpleTemplateLayout(unittest.TestCase):
 
         tl.apply_component('middle-center', placeholder_im)
 
-        actual_initial_pixels = self._get_pixels(tl.resource)
-        actual_initial_pixels = list(actual_initial_pixels)
+        actual_current_pixels = self._get_pixels(tl.resource)
+        actual_current_pixels = list(actual_current_pixels)
 
-        expected_initial_pixels = [
+        expected_current_pixels = [
             (1, 1, 1), (1, 1, 1), (2, 2, 2), (2, 2, 2),
             (1, 1, 1), (1, 1, 1), (2, 2, 2), (2, 2, 2),
             (3, 3, 3), (3, 3, 3), (3, 3, 3), (3, 3, 3),
@@ -500,7 +500,7 @@ class TestSimpleTemplateLayout(unittest.TestCase):
             (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0),
         ]
 
-        self.assertEquals(actual_initial_pixels, expected_initial_pixels)
+        self.assertEquals(actual_current_pixels, expected_current_pixels)
 
         # Overlay bottom-center.
 
@@ -512,10 +512,10 @@ class TestSimpleTemplateLayout(unittest.TestCase):
 
         tl.apply_component('bottom-center', placeholder_im)
 
-        actual_initial_pixels = self._get_pixels(tl.resource)
-        actual_initial_pixels = list(actual_initial_pixels)
+        actual_current_pixels = self._get_pixels(tl.resource)
+        actual_current_pixels = list(actual_current_pixels)
 
-        expected_initial_pixels = [
+        expected_current_pixels = [
             (1, 1, 1), (1, 1, 1), (2, 2, 2), (2, 2, 2),
             (1, 1, 1), (1, 1, 1), (2, 2, 2), (2, 2, 2),
             (3, 3, 3), (3, 3, 3), (3, 3, 3), (3, 3, 3),
@@ -524,7 +524,7 @@ class TestSimpleTemplateLayout(unittest.TestCase):
             (4, 4, 4), (4, 4, 4), (4, 4, 4), (4, 4, 4),
         ]
 
-        self.assertEquals(actual_initial_pixels, expected_initial_pixels)
+        self.assertEquals(actual_current_pixels, expected_current_pixels)
 
     def test_apply_component__unknown_placeholder(self):
         tl = self._get_basic_object()
